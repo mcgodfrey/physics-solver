@@ -60,3 +60,6 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+#a few example projects and code I've written in the past
+resources/

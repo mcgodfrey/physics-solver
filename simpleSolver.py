@@ -13,9 +13,11 @@ from scipy.interpolate import interp1d
 def round2int(x):
     return int(x+0.5)
     
-e=1.6e-19
-m0=9.109e-31
+#e=1.6e-19
+e=1
+#m0=9.109e-31
 hbar=1.05e-34
+m0=hbar**2
 
 class Structure(object):
     def __init__(self,layers,dx):
@@ -37,7 +39,7 @@ class Structure(object):
             index+=layer_numpoints
         self.x = np.linspace(0,self.thickness,self.numpoints)
         
-        self.V_interp=interp1d(self.x, self.V,bounds_error=False)
+        self.V_interp=interp1d(self.x, self.V,bounds_error=False,fill_value=max(self.V))
         
         print "length x = {}".format(len(self.x))
         print "length V = {}".format(len(self.V))
@@ -89,10 +91,12 @@ def find_bound_states(struct, do_plots=False):
       This is the bound state energy
     """
     Es = np.linspace(min(struct.V), max(struct.V), 100)   # vector of energies where we look for the stable states
-    print Es
+    
     psi_inf = []      # vector of wave function at x -> inf (ie, end of domain)
     for e1 in Es:
         psi_inf.append(Wave_function_inf(e1, struct))     # for each energy e1 find the the psi(x) at x = b    
+
+    print psi_inf
     
     E_zeroes = []
     s = np.sign(psi_inf)
@@ -128,7 +132,9 @@ def normalise(psi,x):
  
 def main():
     # main program        
-    layers = [[20,10],[10,0],[20,10]]
+    #layers = [[20e-9,10],[10e-9,0],[20e-9,10]]
+    #dx=0.1e-9
+    layers = [[20,10],[1,0],[20,10]]
     dx=0.1
     struct = Structure(layers,dx)
     
@@ -138,7 +144,7 @@ def main():
     
     print "Bound state energies:"
     for E in bound_states:
-        print " E = {:.2f}".format(E)
+        print " E = {:.2g}".format(E)
 
 
  
